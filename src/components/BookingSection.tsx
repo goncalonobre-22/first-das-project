@@ -1,11 +1,20 @@
 import { useState } from "react";
-import { ChevronDown, User, Calendar, BookOpen, Star } from "lucide-react";
+import { ChevronDown, User, Calendar, BookOpen, Star, Clock, Check } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { pt } from "date-fns/locale";
+import mentor1 from "@/assets/mentor-1.jpg";
 import mentor2 from "@/assets/mentor-2.jpg";
+import mentor3 from "@/assets/mentor-3.jpg";
 
 const BookingSection = () => {
   const [selectedArea, setSelectedArea] = useState("");
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [selectedTime, setSelectedTime] = useState("");
   
   const studyAreas = [
     "Selecione a sua área de estudo...",
@@ -19,20 +28,78 @@ const BookingSection = () => {
     "Matemática e Estatística"
   ];
 
-  const featuredMentor = {
-    name: "Prof. Miguel Torres",
-    speciality: "Engenharia de Software",
-    experience: "12 anos",
-    rating: 4.8,
-    students: 95,
-    image: mentor2,
-    nextAvailable: "Hoje às 16:00",
-    price: "25€/hora",
-    bio: "Especialista em programação e algoritmos, com vasta experiência em preparação para exames de engenharia informática."
+  const mentorsByArea = {
+    "Medicina e Ciências da Saúde": {
+      name: "Dra. Ana Silva",
+      speciality: "Anatomia e Fisiologia",
+      experience: "15 anos",
+      rating: 4.9,
+      students: 120,
+      image: mentor1,
+      nextAvailable: "Amanhã às 10:00",
+      price: "30€/hora",
+      bio: "Especialista em anatomia humana e fisiologia, com doutoramento em medicina. Ajuda estudantes a compreender os sistemas do corpo humano.",
+      availableTimes: ["09:00", "10:00", "14:00", "16:00", "17:00"]
+    },
+    "Engenharia e Tecnologia": {
+      name: "Prof. Miguel Torres",
+      speciality: "Engenharia de Software",
+      experience: "12 anos",
+      rating: 4.8,
+      students: 95,
+      image: mentor2,
+      nextAvailable: "Hoje às 16:00",
+      price: "25€/hora",
+      bio: "Especialista em programação e algoritmos, com vasta experiência em preparação para exames de engenharia informática.",
+      availableTimes: ["14:00", "15:00", "16:00", "17:00", "18:00"]
+    },
+    "Direito e Ciências Jurídicas": {
+      name: "Dr. Carlos Mendes",
+      speciality: "Direito Constitucional",
+      experience: "18 anos",
+      rating: 4.9,
+      students: 85,
+      image: mentor3,
+      nextAvailable: "Hoje às 15:00",
+      price: "35€/hora",
+      bio: "Advogado especializado em direito constitucional e administrativo. Professor universitário com vasta experiência em preparação para exames da ordem.",
+      availableTimes: ["11:00", "13:00", "15:00", "16:00", "17:00"]
+    },
+    "Gestão e Economia": {
+      name: "Prof. Sofia Costa",
+      speciality: "Gestão Estratégica",
+      experience: "14 anos",
+      rating: 4.7,
+      students: 110,
+      image: mentor1,
+      nextAvailable: "Amanhã às 11:00",
+      price: "28€/hora",
+      bio: "MBA em gestão estratégica com experiência em consultoria empresarial. Especialista em análise financeira e planeamento estratégico.",
+      availableTimes: ["09:00", "11:00", "14:00", "15:00", "16:00"]
+    }
   };
 
+  const getFeaturedMentor = () => {
+    if (selectedArea && selectedArea !== "Selecione a sua área de estudo..." && mentorsByArea[selectedArea as keyof typeof mentorsByArea]) {
+      return mentorsByArea[selectedArea as keyof typeof mentorsByArea];
+    }
+    return mentorsByArea["Engenharia e Tecnologia"]; // Default mentor
+  };
+
+  const featuredMentor = getFeaturedMentor();
+
+  const handleBookingClick = () => {
+    setShowDatePicker(true);
+  };
+
+  const handleTimeSelect = (time: string) => {
+    setSelectedTime(time);
+  };
+
+  const isBooked = selectedDate && selectedTime;
+
   return (
-    <section className="py-20 bg-gradient-primary text-primary-foreground">
+    <section id="booking-section" className="py-20 bg-gradient-primary text-primary-foreground">
       <div className="container mx-auto px-4">
         
         {/* Header */}
@@ -195,11 +262,79 @@ const BookingSection = () => {
                   </div>
                 </div>
 
+                {/* Date and Time Picker */}
+                {showDatePicker && (
+                  <div className="space-y-4 p-4 bg-gradient-subtle rounded-lg border animate-fade-in">
+                    <h4 className="font-semibold text-foreground flex items-center gap-2">
+                      <Calendar className="w-4 h-4" />
+                      Escolha a data e hora
+                    </h4>
+                    
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {/* Date Picker */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-muted-foreground">Data</label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full justify-start text-left font-normal"
+                            >
+                              <Calendar className="mr-2 h-4 w-4" />
+                              {selectedDate ? format(selectedDate, "PPP", { locale: pt }) : "Selecionar data"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <CalendarComponent
+                              mode="single"
+                              selected={selectedDate}
+                              onSelect={setSelectedDate}
+                              disabled={(date) => date < new Date() || date > new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)}
+                              initialFocus
+                              className="p-3 pointer-events-auto"
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+
+                      {/* Time Picker */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-muted-foreground">Hora</label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {featuredMentor.availableTimes.map((time) => (
+                            <Button
+                              key={time}
+                              variant={selectedTime === time ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => handleTimeSelect(time)}
+                              className="text-xs"
+                            >
+                              {time}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* CTA Buttons */}
                 <div className="space-y-3">
-                  <Button variant="cta" className="w-full text-lg py-6">
-                    Marcar sessão com {featuredMentor.name.split(' ')[1]}
-                  </Button>
+                  {isBooked ? (
+                    <Button variant="cta" className="w-full text-lg py-6">
+                      <Check className="w-5 h-5 mr-2" />
+                      Confirmar sessão - {selectedDate && format(selectedDate, "dd/MM", { locale: pt })} às {selectedTime}
+                    </Button>
+                  ) : (
+                    <Button 
+                      variant="cta" 
+                      className="w-full text-lg py-6"
+                      onClick={handleBookingClick}
+                    >
+                      <Clock className="w-5 h-5 mr-2" />
+                      Marcar sessão com {featuredMentor.name.split(' ')[1]}
+                    </Button>
+                  )}
                   <Button variant="outline" className="w-full">
                     Ver perfil completo
                   </Button>
