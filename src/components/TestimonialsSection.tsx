@@ -136,9 +136,6 @@ const TestimonialsSection = () => {
               </div>
             </div>
 
-            <button className="bg-gradient-accent text-accent-foreground px-8 py-4 rounded-lg font-semibold shadow-medium hover:shadow-large transform hover:scale-105 transition-all duration-300">
-              Ver todas as avaliações
-            </button>
           </div>
         </div>
       </div>

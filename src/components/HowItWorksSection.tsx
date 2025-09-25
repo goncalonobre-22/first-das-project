@@ -87,20 +87,6 @@ const HowItWorksSection = () => {
           ))}
         </div>
 
-        {/* Bottom CTA */}
-        <div className="text-center mt-16 space-y-6 animate-fade-in">
-          <div className="bg-background rounded-2xl p-8 shadow-medium border border-border/50 max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-foreground mb-4">
-              Pronto para começar?
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              Junte-se a centenas de estudantes que já transformaram os seus resultados académicos.
-            </p>
-            <button className="bg-gradient-accent text-accent-foreground px-8 py-4 rounded-lg font-semibold shadow-medium hover:shadow-large transform hover:scale-105 transition-all duration-300">
-              Iniciar agora - É gratuito
-            </button>
-          </div>
-        </div>
       </div>
     </section>
   );

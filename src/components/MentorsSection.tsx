@@ -1,11 +1,33 @@
-import { Star, BookOpen, Users } from "lucide-react";
+import { Star, BookOpen, Users, Calendar, Clock, ChevronDown, ChevronUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import mentor1 from "@/assets/mentor-1.jpg";
 import mentor2 from "@/assets/mentor-2.jpg"; 
 import mentor3 from "@/assets/mentor-3.jpg";
 
 const MentorsSection = () => {
+  const [expandedMentor, setExpandedMentor] = useState<number | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedTime, setSelectedTime] = useState<string>("");
+
+  const availableDates = [
+    "2024-01-15", "2024-01-16", "2024-01-17", "2024-01-22", "2024-01-23"
+  ];
+
+  const availableTimes = [
+    "09:00", "10:30", "14:00", "15:30", "17:00"
+  ];
+
+  const handleBookingToggle = (mentorIndex: number) => {
+    if (expandedMentor === mentorIndex) {
+      setExpandedMentor(null);
+      setSelectedDate("");
+      setSelectedTime("");
+    } else {
+      setExpandedMentor(mentorIndex);
+    }
+  };
   const mentors = [
     {
       name: "Dra. Sofia Costa",
@@ -47,7 +69,7 @@ const MentorsSection = () => {
         <div className="text-center max-w-4xl mx-auto mb-16 space-y-6 animate-fade-in">
           <h2 className="text-3xl md:text-5xl font-bold">
             <span className="text-foreground">Conheça os nossos</span>{" "}
-            <span className="bg-gradient-primary bg-clip-text text-transparent">mentores estrela</span>
+            <span className="bg-gradient-primary bg-clip-text text-transparent">mentores</span>
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed">
             Profissionais experientes e qualificados, prontos para acelerar 
@@ -127,9 +149,92 @@ const MentorsSection = () => {
                   <Button 
                     variant="cta" 
                     className="w-full mt-4"
+                    onClick={() => handleBookingToggle(index)}
                   >
-                    Marcar sessão
+                    {expandedMentor === index ? (
+                      <>
+                        <ChevronUp className="w-4 h-4 mr-2" />
+                        Fechar marcação
+                      </>
+                    ) : (
+                      <>
+                        <Calendar className="w-4 h-4 mr-2" />
+                        Marcar sessão
+                      </>
+                    )}
                   </Button>
+
+                  {/* Expandable Booking Interface */}
+                  {expandedMentor === index && (
+                    <div className="mt-6 p-6 bg-background/50 rounded-lg border border-border/30 animate-accordion-down">
+                      <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        Marcar sessão com {mentor.name}
+                      </h4>
+                      
+                      {/* Date Selection */}
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-muted-foreground mb-2">
+                            Escolha uma data disponível:
+                          </label>
+                          <div className="grid grid-cols-2 gap-2">
+                            {availableDates.map((date) => (
+                              <button
+                                key={date}
+                                onClick={() => setSelectedDate(date)}
+                                className={`p-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                                  selectedDate === date
+                                    ? "bg-primary text-primary-foreground shadow-soft"
+                                    : "bg-background/80 hover:bg-primary/10 text-foreground border border-border/50"
+                                }`}
+                              >
+                                {new Date(date).toLocaleDateString("pt-PT", {
+                                  day: "numeric",
+                                  month: "short"
+                                })}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Time Selection */}
+                        {selectedDate && (
+                          <div>
+                            <label className="block text-sm font-medium text-muted-foreground mb-2 flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              Escolha o horário:
+                            </label>
+                            <div className="grid grid-cols-3 gap-2">
+                              {availableTimes.map((time) => (
+                                <button
+                                  key={time}
+                                  onClick={() => setSelectedTime(time)}
+                                  className={`p-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                                    selectedTime === time
+                                      ? "bg-accent text-accent-foreground shadow-soft"
+                                      : "bg-background/80 hover:bg-accent/10 text-foreground border border-border/50"
+                                  }`}
+                                >
+                                  {time}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Confirm Button */}
+                        {selectedDate && selectedTime && (
+                          <Button 
+                            variant="cta" 
+                            className="w-full mt-4 bg-gradient-accent animate-scale-in"
+                          >
+                            Confirmar marcação para {selectedDate} às {selectedTime}
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Hover glow effect */}
@@ -139,27 +244,6 @@ const MentorsSection = () => {
           ))}
         </div>
 
-        {/* All Mentors CTA */}
-        <div className="text-center mt-16 space-y-6 animate-fade-in">
-          <div className="bg-gradient-primary rounded-2xl p-8 text-center text-primary-foreground max-w-3xl mx-auto">
-            <h3 className="text-2xl font-bold mb-4">
-              Mais de 50 mentores especializados
-            </h3>
-            <p className="text-primary-foreground/90 mb-6 leading-relaxed">
-              Encontre o mentor perfeito para a sua área de estudo. 
-              Temos especialistas em todas as principais disciplinas académicas.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="outline-white" size="lg">
-                Ver todos os mentores
-              </Button>
-              <Button variant="cta" size="lg" className="bg-accent hover:bg-accent-glow">
-                Encontrar o meu mentor
-              </Button>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

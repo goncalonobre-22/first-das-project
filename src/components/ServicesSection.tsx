@@ -79,20 +79,6 @@ const ServicesSection = () => {
           ))}
         </div>
 
-        {/* CTA */}
-        <div className="text-center mt-16 animate-fade-in">
-          <p className="text-muted-foreground mb-6">
-            Pronto para começar a sua jornada de aprendizagem?
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-gradient-accent text-accent-foreground px-8 py-4 rounded-lg font-semibold shadow-medium hover:shadow-large transform hover:scale-105 transition-all duration-300">
-              Ver todos os serviços
-            </button>
-            <button className="border border-border bg-background text-foreground px-8 py-4 rounded-lg font-medium hover:bg-secondary transition-all duration-300">
-              Falar com conselheiro
-            </button>
-          </div>
-        </div>
       </div>
     </section>
   );
