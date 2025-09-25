@@ -6,7 +6,6 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import MentorsSection from "@/components/MentorsSection";
 import BookingSection from "@/components/BookingSection";
 import FooterSection from "@/components/FooterSection";
-import ChatWidget from "@/components/ChatWidget";
 
 const Landing = () => {
   return (
@@ -19,7 +18,6 @@ const Landing = () => {
       <MentorsSection />
       <BookingSection />
       <FooterSection />
-      <ChatWidget />
     </main>
   );
 };
