@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, User, Calendar, BookOpen, Star, Clock, Check } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -87,6 +87,21 @@ const BookingSection = () => {
   };
 
   const featuredMentor = getFeaturedMentor();
+
+  // Load Cal.com script
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.innerHTML = `
+      (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+      Cal("init", "sessao-de-mentoria", {origin:"https://app.cal.com"});
+      Cal.ns["sessao-de-mentoria"]("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#ff8b00"}},"hideEventTypeDetails":false,"layout":"month_view"});
+    `;
+    document.head.appendChild(script);
+    
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
 
   const handleBookingClick = () => {
     setShowDatePicker(true);
@@ -329,7 +344,9 @@ const BookingSection = () => {
                     <Button 
                       variant="cta" 
                       className="w-full text-lg py-6"
-                      onClick={handleBookingClick}
+                      data-cal-link="goncalonobre/sessao-de-mentoria"
+                      data-cal-namespace="sessao-de-mentoria"
+                      data-cal-config='{"layout":"month_view"}'
                     >
                       <Clock className="w-5 h-5 mr-2" />
                       Marcar sessão com {featuredMentor.name.split(' ')[1]}
