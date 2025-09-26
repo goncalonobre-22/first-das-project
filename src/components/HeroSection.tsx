@@ -40,9 +40,7 @@ const HeroSection = () => {
                 variant="cta" 
                 size="lg" 
                 className="text-lg px-8 py-6"
-                data-cal-link="goncalonobre/sessao-de-mentoria"
-                data-cal-namespace="sessao-de-mentoria"
-                data-cal-config='{"layout":"month_view"}'
+                onClick={() => document.getElementById('booking-section')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 Marcar sessão agora
               </Button>
