@@ -18,44 +18,16 @@ declare global {
 
 const BookingSection = () => {
   useEffect(() => {
-    // Load Cal.com embed script
+    // Load Cal.com embed script for click-triggered calendar
     if (!window.Cal) {
       const script = document.createElement('script');
-      script.src = 'https://app.cal.com/embed/embed.js';
-      script.type = 'module';
-      script.onload = () => {
-        if (window.Cal) {
-          window.Cal("init", "sessao-de-mentoria", {origin:"https://app.cal.com"});
-          
-          window.Cal.ns["sessao-de-mentoria"]("inline", {
-            elementOrSelector:"#my-cal-inline-sessao-de-mentoria",
-            config: {"layout":"month_view"},
-            calLink: "goncalonobre/sessao-de-mentoria",
-          });
-
-          window.Cal.ns["sessao-de-mentoria"]("ui", {
-            "cssVarsPerTheme":{"light":{"cal-brand":"#ffaf00"}},
-            "hideEventTypeDetails":false,
-            "layout":"month_view"
-          });
-        }
-      };
+      script.type = 'text/javascript';
+      script.innerHTML = `
+        (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+        Cal("init", "sessao-de-mentoria", {origin:"https://app.cal.com"});
+        Cal.ns["sessao-de-mentoria"]("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#ffa300"},"dark":{"cal-brand":"#ffffff"}},"hideEventTypeDetails":false,"layout":"month_view"});
+      `;
       document.head.appendChild(script);
-    } else {
-      // If Cal is already loaded, initialize the embed
-      window.Cal("init", "sessao-de-mentoria", {origin:"https://app.cal.com"});
-      
-      window.Cal.ns["sessao-de-mentoria"]("inline", {
-        elementOrSelector:"#my-cal-inline-sessao-de-mentoria",
-        config: {"layout":"month_view"},
-        calLink: "goncalonobre/sessao-de-mentoria",
-      });
-
-      window.Cal.ns["sessao-de-mentoria"]("ui", {
-        "cssVarsPerTheme":{"light":{"cal-brand":"#ffaf00"}},
-        "hideEventTypeDetails":false,
-        "layout":"month_view"
-      });
     }
   }, []);
 
@@ -74,24 +46,8 @@ const BookingSection = () => {
           </p>
         </div>
 
-        {/* Cal.com Embed Container */}
-        <div className="max-w-5xl mx-auto">
-          <div className="bg-background/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 shadow-large">
-            <div 
-              id="my-cal-inline-sessao-de-mentoria" 
-              className="w-full min-h-[600px] rounded-lg overflow-hidden"
-              style={{
-                height: '100%',
-                minHeight: '600px',
-                background: 'hsl(var(--background))',
-                borderRadius: '0.5rem'
-              }}
-            />
-          </div>
-        </div>
-
         {/* Trust signals */}
-        <div className="text-center mt-12 space-y-4">
+        <div className="text-center space-y-4">
           <div className="flex flex-wrap justify-center items-center gap-8 text-primary-foreground/80">
             <div className="flex items-center gap-2">
               <span className="text-lg">✅</span>
