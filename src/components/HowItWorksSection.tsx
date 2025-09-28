@@ -48,13 +48,6 @@ const HowItWorksSection = () => {
               className="relative group animate-slide-up"
               style={{ animationDelay: `${index * 200}ms` }}
             >
-              
-              {/* Connection Line */}
-              {index < steps.length - 1 && (
-                <div className="hidden md:block absolute top-20 left-full w-full h-0.5 bg-gradient-to-r from-primary/30 to-accent/30 z-0">
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-accent rounded-full animate-pulse"></div>
-                </div>
-              )}
 
               <div className="relative z-10 text-center space-y-6">
                 

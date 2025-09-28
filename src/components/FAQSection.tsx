@@ -29,7 +29,7 @@ const FAQSection = () => {
             Perguntas Frequentes
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Tire as suas dúvidas através das nossas perguntas frequentes
+            Tire as suas dúvidas através das nossas perguntas frequentes o pergunte ao nosso ChatBot.
           </p>
         </div>
 
