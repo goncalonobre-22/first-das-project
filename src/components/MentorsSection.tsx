@@ -151,7 +151,7 @@ const MentorsSection = () => {
                     ))}
                   </div>
 
-                  {/* Stats */}
+                   {/* Stats */}
                   <div className="flex items-center justify-between text-sm text-muted-foreground pt-4 border-t border-border/50">
                     <div className="flex items-center gap-1">
                       <BookOpen className="w-4 h-4" />
@@ -162,115 +162,6 @@ const MentorsSection = () => {
                       <span>{mentor.students} estudantes</span>
                     </div>
                   </div>
-
-                  {/* CTA Button */}
-                  <Button 
-                    variant="cta" 
-                    className="w-full mt-4"
-                    onClick={() => handleBookingToggle(index)}
-                  >
-                    {expandedMentor === index ? (
-                      <>
-                        <ChevronUp className="w-4 h-4 mr-2" />
-                        Fechar marcação
-                      </>
-                    ) : (
-                      <>
-                        <Calendar className="w-4 h-4 mr-2" />
-                        Marcar sessão
-                      </>
-                    )}
-                  </Button>
-
-                  {/* Expandable Booking Interface */}
-                  {expandedMentor === index && (
-                    <div className="mt-6 p-6 bg-background/50 rounded-lg border border-border/30 animate-accordion-down">
-                      <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
-                        Marcar sessão com {mentor.name}
-                      </h4>
-                      
-                      {/* Date and Time Selection */}
-                      <div className="space-y-4">
-                        <div className="grid md:grid-cols-2 gap-4">
-                          {/* Date Picker */}
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium text-muted-foreground">Data</label>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  className="w-full justify-start text-left font-normal"
-                                >
-                                  <Calendar className="mr-2 h-4 w-4" />
-                                  {selectedDate ? format(selectedDate, "PPP", { locale: pt }) : "Selecionar data"}
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0" align="start">
-                                <CalendarComponent
-                                  mode="single"
-                                  selected={selectedDate}
-                                  onSelect={setSelectedDate}
-                                  disabled={(date) => date < new Date() || date > new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)}
-                                  initialFocus
-                                  className="p-3 pointer-events-auto"
-                                />
-                              </PopoverContent>
-                            </Popover>
-                          </div>
-
-                          {/* Time Picker */}
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium text-muted-foreground">Hora</label>
-                            <div className="grid grid-cols-3 gap-2">
-                              {mentor.availableTimes.map((time) => (
-                                <Button
-                                  key={time}
-                                  variant={selectedTime === time ? "default" : "outline"}
-                                  size="sm"
-                                  onClick={() => handleTimeSelect(time)}
-                                  className="text-xs"
-                                >
-                                  {time}
-                                </Button>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* CTA Buttons */}
-                        <div className="space-y-3 pt-4">
-                          {selectedDate && selectedTime ? (
-                            <Button variant="cta" className="w-full text-lg py-4">
-                              <Check className="w-5 h-5 mr-2" />
-                              Confirmar sessão - {format(selectedDate, "dd/MM", { locale: pt })} às {selectedTime}
-                            </Button>
-                          ) : (
-                            <Button 
-                              variant="cta" 
-                              className="w-full text-lg py-4"
-                              data-cal-link="goncalonobre/sessao-de-mentoria"
-                              data-cal-namespace="sessao-de-mentoria"
-                              data-cal-config='{"layout":"month_view"}'
-                            >
-                              <Clock className="w-5 h-5 mr-2" />
-                              Marcar sessão com {mentor.name.split(' ')[1]}
-                            </Button>
-                          )}
-                          <Button variant="outline" className="w-full">
-                            Ver perfil completo
-                          </Button>
-                        </div>
-
-                        {/* Trust signals */}
-                        <div className="text-center pt-4 border-t border-border/50">
-                          <p className="text-sm text-muted-foreground">
-                            ✅ Verificado • 🛡️ Pagamento seguro • 🔄 Cancelamento gratuito
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 {/* Hover glow effect */}
