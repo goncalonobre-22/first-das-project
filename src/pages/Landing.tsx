@@ -6,6 +6,7 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import MentorsSection from "@/components/MentorsSection";
 import BookingSection from "@/components/BookingSection";
 import FAQSection from "@/components/FAQSection";
+import ProposalFormSection from "@/components/ProposalFormSection";
 import FooterSection from "@/components/FooterSection";
 
 const Landing = () => {
@@ -19,6 +20,7 @@ const Landing = () => {
       <MentorsSection />
       <BookingSection />
       <FAQSection />
+      <ProposalFormSection />
       <FooterSection />
     </main>
   );
