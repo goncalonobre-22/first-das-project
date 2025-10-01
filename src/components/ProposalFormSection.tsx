@@ -12,21 +12,43 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
 import { Send } from "lucide-react";
+import { useState } from "react";
 
 const proposalFormSchema = z.object({
   name: z.string().trim().min(1, { message: "Nome é obrigatório" }).max(100, { message: "Nome deve ter menos de 100 caracteres" }),
   email: z.string().trim().email({ message: "Email inválido" }).max(255, { message: "Email deve ter menos de 255 caracteres" }),
   phone: z.string().trim().min(1, { message: "Telefone é obrigatório" }).max(20, { message: "Telefone deve ter menos de 20 caracteres" }),
-  subject: z.string().trim().min(1, { message: "Assunto é obrigatório" }).max(200, { message: "Assunto deve ter menos de 200 caracteres" }),
-  message: z.string().trim().min(1, { message: "Mensagem é obrigatória" }).max(1000, { message: "Mensagem deve ter menos de 1000 caracteres" }),
+  serviceArea: z.string().min(1, { message: "Área do serviço é obrigatória" }),
+  description: z.string().trim().min(1, { message: "Descrição é obrigatória" }).max(1000, { message: "Descrição deve ter menos de 1000 caracteres" }),
+  priceRange: z.number().min(0).max(100),
 });
 
 type ProposalFormValues = z.infer<typeof proposalFormSchema>;
 
+const studyAreas = [
+  "Medicina e Ciências da Saúde",
+  "Engenharia e Tecnologia", 
+  "Direito e Ciências Jurídicas",
+  "Gestão e Economia",
+  "Psicologia e Ciências Sociais",
+  "Arquitetura e Design",
+  "Comunicação e Marketing",
+  "Matemática e Estatística"
+];
+
 const ProposalFormSection = () => {
   const { toast } = useToast();
+  const [priceValue, setPriceValue] = useState([0]);
   
   const form = useForm<ProposalFormValues>({
     resolver: zodResolver(proposalFormSchema),
@@ -34,8 +56,9 @@ const ProposalFormSection = () => {
       name: "",
       email: "",
       phone: "",
-      subject: "",
-      message: "",
+      serviceArea: "",
+      description: "",
+      priceRange: 0,
     },
   });
 
@@ -110,12 +133,41 @@ const ProposalFormSection = () => {
 
               <FormField
                 control={form.control}
-                name="subject"
+                name="serviceArea"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Assunto</FormLabel>
+                    <FormLabel>Área do Serviço</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a área de serviço" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {studyAreas.map((area) => (
+                          <SelectItem key={area} value={area}>
+                            {area}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Descrição do Pedido</FormLabel>
                     <FormControl>
-                      <Input placeholder="Assunto do pedido" {...field} />
+                      <Textarea 
+                        placeholder="Descreva em detalhe o que necessita..."
+                        className="min-h-[150px]"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -124,17 +176,27 @@ const ProposalFormSection = () => {
 
               <FormField
                 control={form.control}
-                name="message"
+                name="priceRange"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Mensagem</FormLabel>
+                    <FormLabel>Orçamento para Aulas: {priceValue[0] === 0 ? "Gratuito" : `${priceValue[0]}€/hora`}</FormLabel>
                     <FormControl>
-                      <Textarea 
-                        placeholder="Descreva o que necessita..."
-                        className="min-h-[150px]"
-                        {...field}
+                      <Slider
+                        min={0}
+                        max={100}
+                        step={5}
+                        value={priceValue}
+                        onValueChange={(value) => {
+                          setPriceValue(value);
+                          field.onChange(value[0]);
+                        }}
+                        className="py-4"
                       />
                     </FormControl>
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>Gratuito</span>
+                      <span>100€/hora</span>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
