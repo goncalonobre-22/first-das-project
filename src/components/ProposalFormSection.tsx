@@ -64,16 +64,40 @@ const ProposalFormSection = () => {
     },
   });
 
-  const onSubmit = (data: ProposalFormValues) => {
-    // Here you would typically send the data to your backend
-    console.log("Proposal form submitted:", data);
-    
-    toast({
-      title: "Proposta Enviada!",
-      description: "Entraremos em contacto em breve.",
-    });
-    
-    form.reset();
+  const onSubmit = async (data: ProposalFormValues) => {
+    try {
+      // Send data to Lindy webhook
+      const webhookUrl = "https://webhooks.lindy.ai/webhooks/e9400443-1dad-49d3-883c-52b23a5434b5";
+      const webhookSecret = "YOUR_WEBHOOK_SECRET_HERE"; // Replace with your actual webhook secret
+      
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${webhookSecret}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send proposal");
+      }
+
+      toast({
+        title: "Proposta Enviada!",
+        description: "Entraremos em contacto em breve.",
+      });
+      
+      form.reset();
+      setPriceRange([0, 100]);
+    } catch (error) {
+      console.error("Error submitting proposal:", error);
+      toast({
+        title: "Erro ao enviar proposta",
+        description: "Por favor, tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
