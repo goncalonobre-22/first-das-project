@@ -30,7 +30,8 @@ const proposalFormSchema = z.object({
   phone: z.string().trim().min(1, { message: "Telefone é obrigatório" }).max(20, { message: "Telefone deve ter menos de 20 caracteres" }),
   serviceArea: z.string().min(1, { message: "Área do serviço é obrigatória" }),
   description: z.string().trim().min(1, { message: "Descrição é obrigatória" }).max(1000, { message: "Descrição deve ter menos de 1000 caracteres" }),
-  priceRange: z.number().min(0).max(100),
+  priceMin: z.number().min(0).max(100),
+  priceMax: z.number().min(0).max(100),
 });
 
 type ProposalFormValues = z.infer<typeof proposalFormSchema>;
@@ -48,7 +49,7 @@ const studyAreas = [
 
 const ProposalFormSection = () => {
   const { toast } = useToast();
-  const [priceValue, setPriceValue] = useState([0]);
+  const [priceRange, setPriceRange] = useState([0, 100]);
   
   const form = useForm<ProposalFormValues>({
     resolver: zodResolver(proposalFormSchema),
@@ -58,7 +59,8 @@ const ProposalFormSection = () => {
       phone: "",
       serviceArea: "",
       description: "",
-      priceRange: 0,
+      priceMin: 0,
+      priceMax: 100,
     },
   });
 
@@ -174,33 +176,29 @@ const ProposalFormSection = () => {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="priceRange"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Orçamento para Aulas: {priceValue[0] === 0 ? "Gratuito" : `${priceValue[0]}€/hora`}</FormLabel>
-                    <FormControl>
-                      <Slider
-                        min={0}
-                        max={100}
-                        step={5}
-                        value={priceValue}
-                        onValueChange={(value) => {
-                          setPriceValue(value);
-                          field.onChange(value[0]);
-                        }}
-                        className="py-4"
-                      />
-                    </FormControl>
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>Gratuito</span>
-                      <span>100€/hora</span>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="space-y-6">
+                <div>
+                  <FormLabel>
+                    Orçamento para Aulas: {priceRange[0] === 0 ? "Gratuito" : `${priceRange[0]}€`} - {priceRange[1]}€/hora
+                  </FormLabel>
+                  <Slider
+                    min={0}
+                    max={100}
+                    step={5}
+                    value={priceRange}
+                    onValueChange={(value) => {
+                      setPriceRange(value);
+                      form.setValue("priceMin", value[0]);
+                      form.setValue("priceMax", value[1]);
+                    }}
+                    className="py-4"
+                  />
+                  <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                    <span>Gratuito</span>
+                    <span>100€/hora</span>
+                  </div>
+                </div>
+              </div>
 
               <Button type="submit" size="lg" className="w-full">
                 <Send className="mr-2 h-5 w-5" />
