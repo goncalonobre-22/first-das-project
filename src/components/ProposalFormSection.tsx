@@ -27,7 +27,7 @@ import { useState } from "react";
 const proposalFormSchema = z.object({
   name: z.string().trim().min(1, { message: "Nome é obrigatório" }).max(100, { message: "Nome deve ter menos de 100 caracteres" }),
   email: z.string().trim().email({ message: "Email inválido" }).max(255, { message: "Email deve ter menos de 255 caracteres" }),
-  phone: z.string().trim().min(1, { message: "Telefone é obrigatório" }).max(20, { message: "Telefone deve ter menos de 20 caracteres" }),
+  phone: z.string().trim().max(20, { message: "Telefone deve ter menos de 20 caracteres" }),
   serviceArea: z.string().min(1, { message: "Área do serviço é obrigatória" }),
   description: z.string().trim().min(1, { message: "Descrição é obrigatória" }).max(1000, { message: "Descrição deve ter menos de 1000 caracteres" }),
   priceMin: z.number().min(0).max(100),
@@ -147,7 +147,7 @@ const ProposalFormSection = () => {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Telefone</FormLabel>
+                      <FormLabel>Telefone (opcional)</FormLabel>
                       <FormControl>
                         <Input placeholder="+351 123 456 789" {...field} />
                       </FormControl>
