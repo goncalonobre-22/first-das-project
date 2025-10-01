@@ -67,7 +67,7 @@ const ProposalFormSection = () => {
   const onSubmit = async (data: ProposalFormValues) => {
     try {
       // Send data to Lindy webhook
-      const webhookUrl = "https://webhooks.lindy.ai/webhooks/e9400443-1dad-49d3-883c-52b23a5434b5";
+      const webhookUrl = "https://public.lindy.ai/webhook/e9400443-1dad-49d3-883c-52b23a543b5";
       const webhookSecret = "YOUR_WEBHOOK_SECRET_HERE"; // Replace with your actual webhook secret
       
       const response = await fetch(webhookUrl, {
