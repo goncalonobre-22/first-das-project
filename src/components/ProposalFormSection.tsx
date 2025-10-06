@@ -27,9 +27,8 @@ import { useState } from "react";
 const proposalFormSchema = z.object({
   name: z.string().trim().min(1, { message: "Nome é obrigatório" }).max(100, { message: "Nome deve ter menos de 100 caracteres" }),
   email: z.string().trim().email({ message: "Email inválido" }).max(255, { message: "Email deve ter menos de 255 caracteres" }),
-  phone: z.string().trim().max(20, { message: "Telefone deve ter menos de 20 caracteres" }),
   serviceArea: z.string().min(1, { message: "Área do serviço é obrigatória" }),
-  description: z.string().trim().min(1, { message: "Descrição é obrigatória" }).max(1000, { message: "Descrição deve ter menos de 1000 caracteres" }),
+  description: z.string().trim().max(1000, { message: "Descrição deve ter menos de 1000 caracteres" }).optional(),
   priceMin: z.number().min(0).max(100),
   priceMax: z.number().min(0).max(100),
 });
@@ -56,7 +55,6 @@ const ProposalFormSection = () => {
     defaultValues: {
       name: "",
       email: "",
-      phone: "",
       serviceArea: "",
       description: "",
       priceMin: 0,
@@ -136,35 +134,19 @@ const ProposalFormSection = () => {
                 )}
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input type="email" placeholder="seu@email.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Telefone (opcional)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="+351 123 456 789" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="seu@email.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}
@@ -196,7 +178,7 @@ const ProposalFormSection = () => {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Descrição do Pedido</FormLabel>
+                    <FormLabel>Descrição do Pedido (opcional)</FormLabel>
                     <FormControl>
                       <Textarea 
                         placeholder="Descreva em detalhe o que necessita..."
